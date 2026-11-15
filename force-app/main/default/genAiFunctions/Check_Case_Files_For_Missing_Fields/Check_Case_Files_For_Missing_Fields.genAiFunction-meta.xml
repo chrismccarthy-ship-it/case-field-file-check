@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Check Case Files for Missing Fields</masterLabel>
+    <description>Checks the files attached to a case (CSV, TSV, TXT, JSON, PDF, PNG, JPG) for required fields that do not appear at all and for fields that are blank, hold a placeholder such as N/A, or cannot be read. Returns a summary plus, for each file, the missing fields, the empty fields with their row, line or page, and whether the file was parsed exactly or read by AI. Use this when a rep asks whether a case's documents or data files are complete. Do not use it to diagnose a product problem in a screenshot, and do not use it to summarize a case.</description>
+    <invocationTarget>CaseFileFieldValidator</invocationTarget>
+    <invocationTargetType>apex</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <progressIndicatorMessage>Checking the files on this case...</progressIndicatorMessage>
+</GenAiFunction>

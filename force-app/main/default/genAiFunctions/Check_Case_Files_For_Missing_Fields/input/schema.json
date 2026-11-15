@@ -1,0 +1,27 @@
+{
+  "unevaluatedProperties": false,
+  "properties": {
+    "caseId": {
+      "title": "Case",
+      "description": "The case whose files should be checked: its record ID, or the case number exactly as the rep typed it. Provide this on every call.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    },
+    "fileId": {
+      "title": "File ID",
+      "description": "Optional. The ContentVersion (068) or ContentDocument (069) ID of one file to check on its own, taken from the File ID in an earlier result. Leave blank to check every supported file on the case.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    },
+    "requiredFields": {
+      "title": "Required Fields",
+      "description": "Optional. Comma-separated names of the fields the rep says must be filled in, for example \"Date of Birth, Email, Signature\". Leave blank when the rep has not named fields, so every field in each file is checked for empty values.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": true
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

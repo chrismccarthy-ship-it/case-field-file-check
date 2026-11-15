@@ -1,0 +1,50 @@
+{
+  "unevaluatedProperties": false,
+  "properties": {
+    "status": {
+      "title": "Status",
+      "description": "ISSUES_FOUND when any checked file has missing or empty fields, NO_ISSUES_FOUND when every checked file is complete, NOT_CHECKED when no file could be checked.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isDisplayable": false,
+      "copilotAction:isUsedByPlanner": true
+    },
+    "summary": {
+      "title": "Summary",
+      "description": "Plain-text results with one line per file, including the reason when nothing could be checked. Relay this to the rep.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isDisplayable": false,
+      "copilotAction:isUsedByPlanner": true
+    },
+    "filesChecked": {
+      "title": "Files Checked",
+      "description": "Number of files that were checked, whether or not issues were found. Files reported as NOT_CHECKED are not counted.",
+      "lightning:type": "lightning__integerType",
+      "lightning:isPII": false,
+      "copilotAction:isDisplayable": false,
+      "copilotAction:isUsedByPlanner": true
+    },
+    "filesWithIssues": {
+      "title": "Files With Issues",
+      "description": "Number of checked files that have at least one missing or empty field.",
+      "lightning:type": "lightning__integerType",
+      "lightning:isPII": false,
+      "copilotAction:isDisplayable": false,
+      "copilotAction:isUsedByPlanner": true
+    },
+    "files": {
+      "title": "File Results",
+      "description": "Per-file results, newest file first: file ID, name, type, check method (Parsed or AI review), status, missing fields, empty fields with locations, and a note explaining anything not checked.",
+      "maxItems": 2147483647,
+      "items": {
+        "lightning:type": "@apexClassType/c__CaseFileFieldValidator$FileResult"
+      },
+      "lightning:type": "lightning__listType",
+      "lightning:isPII": false,
+      "copilotAction:isDisplayable": false,
+      "copilotAction:isUsedByPlanner": true
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

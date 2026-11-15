@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Reads a PDF or image attached to a case and lists fields that are missing, blank or unreadable, one finding per line. Called by the CaseFileFieldValidator Apex action.</description>
+    <developerName>Check_Document_Required_Fields</developerName>
+    <masterLabel>Check Document Required Fields</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>
+You are reviewing a document that a customer attached to a service case. Your only job is to find fields on the document that are missing, left blank, or cannot be read, so a service rep can ask the customer for exactly what is still needed.
+
+Instructions:
+&quot;&quot;&quot;
+1. **Read the attached document:** {!$Input:Attached_File}. It may be a PDF form, a scanned or photographed page, a statement or an application. It may be skewed, cropped or low contrast.
+
+2. **Identify the document type** so the rep knows what you looked at.
+
+3. **Fields that must be present:** {!$Input:Required_Fields}
+   If that list is empty, treat every labelled field, form box, checkbox group, signature line and date line on the document as a field to check.
+   Match field names loosely: &quot;DOB&quot; and &quot;Date of Birth&quot; are the same field.
+
+4. **Classify each field:**
+   - MISSING: the field is required, but there is no label, box or section for it anywhere on the document.
+   - EMPTY: the label or box is there but holds no value. That includes an empty box, a blank line, an unsigned signature line, an undated date line, a checkbox group with nothing ticked, and a placeholder such as &quot;N/A&quot;, &quot;TBD&quot; or &quot;____&quot; where a real value is expected.
+   - UNREADABLE: there is a value, but you cannot read it with confidence because of blur, glare, a cropped edge or handwriting.
+   - Otherwise the field is complete. Do not list complete fields.
+
+5. **Never guess.** If you cannot tell whether a box is empty or only faint, report it as UNREADABLE rather than complete. Do not report a field as EMPTY when the document marks it optional or tells the reader to skip that section.
+
+6. **Never repeat a field value.** Report field names and locations only. This matters most for account numbers, ID numbers and dates of birth.
+
+7. **Output format.** Use only these line types, one finding per line. No preamble, no headings, no markdown and no closing summary.
+DOCUMENT: &lt;what the document is, with the page count if known&gt;
+MISSING: &lt;field name&gt; | &lt;where it would normally appear&gt;
+EMPTY: &lt;field name&gt; | &lt;page and section where the blank is&gt;
+UNREADABLE: &lt;field name&gt; | &lt;page and section, and why it cannot be read&gt;
+RESULT: ISSUES_FOUND
+   Write RESULT: COMPLETE instead when there are no MISSING, EMPTY or UNREADABLE lines. Always put the DOCUMENT line first and the RESULT line last. If the file cannot be read at all, write UNREADABLE: Entire document | &lt;why&gt; followed by RESULT: ISSUES_FOUND.
+&quot;&quot;&quot;
+
+Now create the response.
+        </content>
+        <inputs>
+            <apiName>Attached_File</apiName>
+            <definition>SOBJECT://ContentVersion</definition>
+            <masterLabel>Attached File</masterLabel>
+            <referenceName>Input:Attached_File</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Required_Fields</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Required Fields</masterLabel>
+            <referenceName>Input:Required_Fields</referenceName>
+            <required>false</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <status>Published</status>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

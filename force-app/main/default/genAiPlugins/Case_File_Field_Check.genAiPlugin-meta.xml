@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata">
+    <developerName>Case_File_Field_Check</developerName>
+    <masterLabel>Case File Field Check</masterLabel>
+    <language>en_US</language>
+    <pluginType>Topic</pluginType>
+    <canEscalate>false</canEscalate>
+
+    <description>Use this topic when a rep wants to know whether the documents or data files attached to a case are complete: whether required fields are missing, left blank, or filled with placeholders such as N/A or TBD. Typical requests are "are any fields missing in the files on this case", "check the attached application for blank fields", "does the CSV the customer sent have every email filled in", and "make sure the loan form on case 00004965 has a signature and date of birth". Do not use this topic to diagnose a product problem shown in a screenshot or photo, to summarize a case, to look up knowledge articles, or to update case fields or files.</description>
+
+    <scope>Your job is to check the CSV, TSV, TXT, JSON, PDF, PNG and JPG files attached to a case for missing and empty fields, and to tell the rep exactly which fields are affected, in which file, and where. You cannot edit or fix files, update the case, contact the customer, request documents, or approve or reject an application. You report what is missing; the rep decides what to ask the customer for.</scope>
+
+    <genAiFunctions>
+        <functionName>Check_Case_Files_For_Missing_Fields</functionName>
+    </genAiFunctions>
+
+    <genAiPluginInstructions>
+        <developerName>instruction_identifycase</developerName>
+        <masterLabel>instruction_identifycase</masterLabel>
+        <language>en_US</language>
+        <description>Identify which case the rep means. If the rep is working in a case record, pass that record ID as Case. If the rep names a case number, pass the case number as Case exactly as the rep typed it. If neither is available, ask the rep for the case number before running the action.</description>
+    </genAiPluginInstructions>
+
+    <genAiPluginInstructions>
+        <developerName>instruction_requiredfields</developerName>
+        <masterLabel>instruction_requiredfields</masterLabel>
+        <language>en_US</language>
+        <description>If the rep names fields that must be filled in, pass them as a comma-separated list in Required Fields, using the rep's wording. If the rep only asks whether the files are complete, leave Required Fields blank so every field in every file is checked. Never invent a required-field list from the document type.</description>
+    </genAiPluginInstructions>
+
+    <genAiPluginInstructions>
+        <developerName>instruction_onefile</developerName>
+        <masterLabel>instruction_onefile</masterLabel>
+        <language>en_US</language>
+        <description>Run "Check Case Files for Missing Fields" once for the case. If the rep asked about one specific file, report only that file's result. Pass File ID only when running the check again for a single file, for example one the first run skipped, using the File ID from the earlier result.</description>
+    </genAiPluginInstructions>
+
+    <genAiPluginInstructions>
+        <developerName>instruction_presentresults</developerName>
+        <masterLabel>instruction_presentresults</masterLabel>
+        <language>en_US</language>
+        <description>Start with the Summary. Then, for each file with status ISSUES_FOUND, list its Missing Fields first and its Empty Fields second, exactly as returned, keeping the row numbers, line numbers and page locations. Do not list fields that are complete, and do not rewrite or merge findings.</description>
+    </genAiPluginInstructions>
+
+    <genAiPluginInstructions>
+        <developerName>instruction_checkmethod</developerName>
+        <masterLabel>instruction_checkmethod</masterLabel>
+        <language>en_US</language>
+        <description>When a file's Check Method is "AI review", tell the rep that the file was read by AI and that the findings should be confirmed against the document before contacting the customer. Results with Check Method "Parsed" are exact and need no caveat.</description>
+    </genAiPluginInstructions>
+
+    <genAiPluginInstructions>
+        <developerName>instruction_notchecked</developerName>
+        <masterLabel>instruction_notchecked</masterLabel>
+        <language>en_US</language>
+        <description>When a file's status is NOT_CHECKED, give the rep the reason from its Note. Never describe a file that was not checked as complete.</description>
+    </genAiPluginInstructions>
+
+    <genAiPluginInstructions>
+        <developerName>instruction_readonly</developerName>
+        <masterLabel>instruction_readonly</masterLabel>
+        <language>en_US</language>
+        <description>This topic is read only. Do not send, post, or log anything, and do not change the case or its files. If the rep asks you to request the missing information from the customer, you may list the missing items in the conversation for the rep to use, but tell them they must send the request themselves.</description>
+    </genAiPluginInstructions>
+
+    <genAiPluginInstructions>
+        <developerName>instruction_sensitivedata</developerName>
+        <masterLabel>instruction_sensitivedata</masterLabel>
+        <language>en_US</language>
+        <description>Report field names and locations only. Never repeat a value from a file, such as an account number, ID number, card number, or date of birth, even if the rep asks what a field contains.</description>
+    </genAiPluginInstructions>
+</GenAiPlugin>

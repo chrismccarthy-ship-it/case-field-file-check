@@ -8,14 +8,25 @@ Asset Library.
 ## Steps
 
 1. Open SRA Ally (or the Service Assistant) in Agent Builder.
-2. Add a new subagent.
-3. Paste the Name, Classification Description and Scope below.
-4. Add each instruction as its own instruction.
-5. Add the action **Check Case Files for Missing Fields** from the Asset Library.
-6. Save, publish and activate.
+2. Create the action first (see "Create the action" below). It did not appear in the
+   Asset Library on its own in 1010sdo, so build it with New Action.
+3. Add a new subagent.
+4. Paste the Name, Classification Description and Scope below.
+5. Add each instruction as its own instruction.
+6. Add the action to the subagent.
+7. Save, publish and activate.
 
-If the action is missing from the Asset Library, tell me. The action is deployed to 1010sdo
-as `Check_Case_Files_For_Missing_Fields`.
+## Create the action
+
+1. In the Asset Library, choose **New Action**.
+2. Set the reference type to **Apex** and pick the class `CaseFileFieldValidator`.
+3. Name it "Check Case Files for Missing Fields" and use the description from
+   `force-app/main/default/genAiFunctions/Check_Case_Files_For_Missing_Fields/`.
+4. Set the inputs and outputs as in "Action settings" below.
+
+The deployed action `Check_Case_Files_For_Missing_Fields` exists in 1010sdo, but SRA did
+not list it. If New Action does not offer the class either, check that the agent user's
+permission set includes `Agentforce_Case_File_Field_Check` (Apex class access).
 
 ## Subagent Name
 
@@ -42,7 +53,18 @@ Your job is to check the CSV, TSV, TXT, JSON, PDF, PNG and JPG files attached to
 
 ## Action settings
 
-Action: **Check Case Files for Missing Fields**
+Action: **Check Case Files for Missing Fields** (Apex class `CaseFileFieldValidator`)
 
-- Inputs: Case, File ID (optional), Required Fields (optional). Leave all as agent-supplied.
-- Outputs: keep at least one output with Filter from Agent Action unchecked, so the summary renders.
+Inputs:
+- Case: user input off, so the agent passes the case on screen.
+- Required Fields: user input on, so the agent reads it from the rep's message.
+- File ID: user input off.
+
+Outputs:
+- Summary: check **Show in conversation** (Filter from Agent Action unchecked). This is the
+  only output that needs to be shown. It is the plain-text result, one line per file.
+- Status, Files Checked, Files With Issues, File Results: leave unchecked. The agent still
+  reads them, and File Results is a nested list that would render as raw data.
+
+If the action returns 0 files in SRA, the class is `with sharing` and reads as the agent
+user. Switching it to `without sharing` is the usual fix, but only do that if you hit it.

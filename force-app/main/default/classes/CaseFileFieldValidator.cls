@@ -4,13 +4,13 @@
  * Checks the files attached to a case for fields that are missing or left
  * empty. CSV, TSV, TXT and JSON files are parsed in Apex, so those results are
  * exact and repeatable. PDFs and images cannot be parsed in Apex, so they are
- * read by the Check_Document_Required_Fields prompt template instead.
+ * read by the Check_Document_Fields_File prompt template instead.
  * Read only: no DML.
  */
 public with sharing class CaseFileFieldValidator {
 
     @TestVisible
-    private static final String PROMPT_TEMPLATE = 'Check_Document_Required_Fields';
+    private static final String PROMPT_TEMPLATE = 'Check_Document_Fields_File';
 
     @TestVisible
     private static final String STATUS_ISSUES = 'ISSUES_FOUND';
@@ -276,7 +276,7 @@ public with sharing class CaseFileFieldValidator {
     private static void reviewWithAi(ContentVersion version, List<String> required, FileResult result) {
         String response;
         try {
-            response = generate(version.Id, String.join(required, ', '));
+            response = generate(version.ContentDocumentId, String.join(required, ', '));
         } catch (Exception e) {
             markNotChecked(result, 'AI review failed: ' + e.getMessage().removeEnd('.') + '. Check that the "'
                 + PROMPT_TEMPLATE + '" prompt template is active and that the user has permission to run it.');
@@ -327,14 +327,14 @@ public with sharing class CaseFileFieldValidator {
     }
 
     private static void addFinding(List<String> findings, String text, String suffix) {
-        String finding = text.trim().replace(' | ', ' - ').replace('|', ' - ');
+        String finding = text.trim().replace('&#124;', '|').replace(' | ', ' - ').replace('|', ' - ');
         if (String.isBlank(finding) || finding.equalsIgnoreCase('none')) {
             return;
         }
         findings.add(suffix == null ? finding : finding + ' (' + suffix + ')');
     }
 
-    private static String generate(Id contentVersionId, String requiredFields) {
+    private static String generate(Id contentDocumentId, String requiredFields) {
         if (Test.isRunningTest()) {
             if (failAiReviewForTest) {
                 throw new AiReviewException('No active template version.');
@@ -343,7 +343,7 @@ public with sharing class CaseFileFieldValidator {
         }
 
         ConnectApi.WrappedValue file = new ConnectApi.WrappedValue();
-        file.value = new Map<String, String>{ 'id' => contentVersionId };
+        file.value = new Map<String, String>{ 'id' => contentDocumentId };
         ConnectApi.WrappedValue fields = new ConnectApi.WrappedValue();
         fields.value = requiredFields;
 

@@ -16,7 +16,7 @@ file attached to a case. It reports:
 | JSON | Parsed in Apex. Walks nested objects and arrays, e.g. `accounts[].number` | Exact and repeatable |
 | TXT with `Label: value` lines | Parsed in Apex as a form | Exact and repeatable |
 | TXT laid out as a table (`,` `\t` `\|` `;`) | Detected and parsed as a table | Exact and repeatable |
-| TXT free prose, PDF, PNG, JPG | Sent to the `Check_Document_Required_Fields` prompt template | AI-read; the agent tells the rep to confirm |
+| TXT free prose, PDF, PNG, JPG | Sent to the `Check_Document_Fields_File` prompt template | AI-read; the agent tells the rep to confirm |
 | Anything else (docx, xlsx ...) | Reported as not checked, with the reason | n/a |
 
 **Required Fields input.** If the rep names fields ("Date of Birth, Email,
@@ -40,7 +40,7 @@ result note, so the rep never gets a silent partial result.
 | `ApexClass` | `CaseFileFieldAnalyzer` | Pure parsing logic for CSV/TSV/TXT/JSON (no SOQL/DML) |
 | `ApexClass` | `CaseFileFieldAnalyzerTest`, `CaseFileFieldValidatorTest` | 27 tests, none insert a Case, so they run in SDO orgs |
 | `ApexClass` | `CaseFileFieldValidatorCaseTest` | 4 Case-linked tests. **These fail in SDO orgs** (see below) |
-| `GenAiPromptTemplate` | `Check_Document_Required_Fields` | Flex template: `Attached_File` (ContentVersion) + `Required_Fields` (String) → line-format findings |
+| `GenAiPromptTemplate` | `Check_Document_Fields_File` | Flex template: `Attached_File` (File / ContentDocument, GPT-5) + `Required_Fields` (String) → line-format findings |
 | `GenAiFunction` | `Check_Case_Files_For_Missing_Fields` | Registers the Apex action for Agent Builder |
 | `GenAiPlugin` | `Case_File_Field_Check` | Topic with routing description, scope, and 8 instructions |
 | `PermissionSet` | `Agentforce_Case_File_Field_Check` | Apex class access (add `agentAccesses` for your agent) |

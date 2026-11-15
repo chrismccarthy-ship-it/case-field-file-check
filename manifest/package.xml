@@ -9,7 +9,7 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>Check_Document_Required_Fields</members>
+        <members>Check_Document_Fields_File</members>
         <name>GenAiPromptTemplate</name>
     </types>
     <types>
